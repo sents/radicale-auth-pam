@@ -34,6 +34,7 @@ class Auth(BaseAuth):
     def __init__(self, configuration, logger):
         self.configuration = configuration
         self.logger = logger
+        self.service = self.configuration.get("auth", "pam_service", fallback="login")
         self.pam = pam()
 
     def is_authenticated(self, user, password):
@@ -43,7 +44,7 @@ class Auth(BaseAuth):
         except KeyError:
             self.logger.debug("PAM No such user: {}".format(user))
             return False
-        if self.pam.authenticate(user, password):
+        if self.pam.authenticate(user, password, self.service):
             self.logger.debug("PAM authenticated user {}".format(user))
             return True
         else:
