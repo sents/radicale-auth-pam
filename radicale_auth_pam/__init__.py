@@ -27,7 +27,6 @@ Authentication based on the ``ldap3`` module
 
 from radicale.auth import BaseAuth
 from pam import pam
-import pwd
 
 
 class Auth(BaseAuth):
@@ -39,14 +38,9 @@ class Auth(BaseAuth):
 
     def is_authenticated(self, user, password):
         """Check if ``user``/``password`` couple is valid."""
-        try:
-            pwd.getpwnam(user)
-        except KeyError:
-            self.logger.debug("PAM No such user: {}".format(user))
-            return False
         if self.pam.authenticate(user, password, self.service):
             self.logger.debug("PAM authenticated user {}".format(user))
             return True
         else:
-            self.logger.debug("PAM invalid credentials for user {}".format(user))
+            self.logger.debug("PAM could not authenticate user {}".format(user))
             return False
