@@ -1,19 +1,23 @@
 from radicale.auth import BaseAuth
 from pam import pam
 
+from radicale.log import logger
+
 
 class Auth(BaseAuth):
-    def __init__(self, configuration, logger):
+    def __init__(self, configuration):
         self.configuration = configuration
-        self.logger = logger
-        self.service = self.configuration.get("auth", "pam_service", fallback="login")
+        if "pam_service" not in self.configuration.options("auth"):
+            self.service = 'login'
+        else:
+            self.service = self.configuration.get("auth", "pam_service")
         self.pam = pam()
 
-    def is_authenticated(self, user, password):
+    def login(self, user, password):
         """Check if ``user``/``password`` couple is valid."""
         if self.pam.authenticate(user, password, self.service):
-            self.logger.debug("PAM authenticated user {}".format(user))
-            return True
+            logger.debug("PAM authenticated user {}".format(user))
+            return user
         else:
-            self.logger.debug("PAM could not authenticate user {}".format(user))
-            return False
+            logger.debug("PAM could not authenticate user {}".format(user))
+            return ""
