@@ -6,6 +6,7 @@ from radicale.log import logger
 
 class Auth(BaseAuth):
     def __init__(self, configuration):
+        super().__init__(configuration)
         self.configuration = configuration
         if "pam_service" not in self.configuration.options("auth"):
             self.service = 'login'
