@@ -1,0 +1,22 @@
+[project]
+name = "radicale-auth-pam"
+version = "0.3"
+authors = [
+  { name="Finn Krein", email="finnkrein@physik.fu-berlin.de" }
+]
+description = "PAM Authentication Plugin for Radicale 3"
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "Operating System :: POSIX :: Linux",
+]
+
+dependencies = [
+  "radicale ~= 3.0",
+  "python-pam ~= 2.0",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
