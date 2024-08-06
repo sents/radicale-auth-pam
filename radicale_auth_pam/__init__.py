@@ -1,8 +1,8 @@
-from radicale.auth import BaseAuth
+import threading
+
 from pam import pam
-
+from radicale.auth import BaseAuth
 from radicale.log import logger
-
 
 class Auth(BaseAuth):
     def __init__(self, configuration):
@@ -12,11 +12,13 @@ class Auth(BaseAuth):
             self.service = 'login'
         else:
             self.service = self.configuration.get("auth", "pam_service")
-        self.pam = pam()
+        self.local = threading.local()
 
     def login(self, user, password):
         """Check if ``user``/``password`` couple is valid."""
-        if self.pam.authenticate(user, password, self.service):
+        if not hasattr(self.local, "pam_instance"):
+            self.local.pam_instance = pam()
+        if self.local.pam_instance.authenticate(user, password, self.service):
             logger.debug("PAM authenticated user {}".format(user))
             return user
         else:
