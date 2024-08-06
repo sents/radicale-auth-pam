@@ -8,5 +8,5 @@ setup(
     description="PAM Authentication Plugin for Radicale 3",
     author="Finn Krein",
     license="GNU AGPL v3",
-    install_requires=["radicale >= 3.0", "python-pam >= 1.8.4"],
+    install_requires=["radicale >= 3.0", "python-pam == 1.8.4"],
     packages=["radicale_auth_pam"])
